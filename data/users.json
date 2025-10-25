@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1761404020838,
+    "username": "admin",
+    "nomeCompleto": "Administrador",
+    "email": "admin@local",
+    "role": "ADMIN",
+    "passwordHash": "08a0ef1ef1fabad4f24c1b43628d8d3b3311c2f46a444812d2a90632350d13b8",
+    "saltHex": "5114f959a45b92dad7a4d1eb9b771ae2",
+    "ativo": true
+  }
+]

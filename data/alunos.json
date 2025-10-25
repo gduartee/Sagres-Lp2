@@ -1,0 +1,15 @@
+[
+  {
+    "id": 1761403445045,
+    "nomeCompleto": "Gabriel Duarte da Silva",
+    "dataNascimento": "26/02/2007",
+    "cpf": "08167155560",
+    "rg": "2323221231",
+    "endereco": "Rua A",
+    "telefone": "73981439422",
+    "email": "gabrielduartesilvan@gmail.com",
+    "responsavelNome": "Resp a",
+    "responsavelTelefone": "73817872821",
+    "responsavelEmail": "resp@email.com"
+  }
+]
