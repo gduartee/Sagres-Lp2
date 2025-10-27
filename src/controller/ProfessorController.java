@@ -12,4 +12,5 @@ public class ProfessorController {
     public List<Professor> buscar(String termo){ return service.buscar(termo); }
     public Professor salvar(Professor p){ return service.salvar(p); }
     public boolean excluir(long id){ return service.excluir(id); }
+    public int calcularCargaHoraria(Professor p){ return service.calcularCargaHoraria(p); }
 }

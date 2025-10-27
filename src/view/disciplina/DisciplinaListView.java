@@ -22,12 +22,16 @@ public class DisciplinaListView extends JPanel {
         JPanel top = new JPanel(new BorderLayout());
         top.add(new JLabel("Buscar (nome/código): "), BorderLayout.WEST);
         top.add(txtBusca, BorderLayout.CENTER);
+        
         JButton btnBuscar = new JButton("Buscar");
         JButton btnNovo = new JButton("Novo");
         JButton btnEditar = new JButton("Editar");
         JButton btnExcluir = new JButton("Excluir");
+        JButton btnVerConteudo = new JButton("Ver Conteúdo");
+        
         JPanel buttons = new JPanel();
-        buttons.add(btnBuscar); buttons.add(btnNovo); buttons.add(btnEditar); buttons.add(btnExcluir);
+        buttons.add(btnBuscar); buttons.add(btnNovo); buttons.add(btnEditar); buttons.add(btnExcluir); buttons.add(btnVerConteudo);
+        
         top.add(buttons, BorderLayout.EAST);
 
         add(top, BorderLayout.NORTH);
@@ -65,8 +69,32 @@ public class DisciplinaListView extends JPanel {
                 carregar(null);
             }
         });
+        
+        btnVerConteudo.addActionListener(e -> verConteudoSelecionado());
 
         carregar(null);
+    }
+    
+    private void verConteudoSelecionado(){
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione uma disciplina.", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        long id = Long.parseLong(model.getValueAt(row,0).toString());
+        
+        Disciplina d = controller.listar().stream()
+                .filter(x -> x.getId() == id)
+                .findFirst().orElse(null);
+                
+        if (d == null) {
+            JOptionPane.showMessageDialog(this, "Disciplina não encontrada.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        ConteudoProgramaticoDialog dlg = new ConteudoProgramaticoDialog(d);
+        dlg.setVisible(true);
     }
 
     private void carregar(String termo){

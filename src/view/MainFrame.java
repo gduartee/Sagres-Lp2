@@ -10,6 +10,7 @@ import view.boletim.BoletimView;
 import view.disciplina.DisciplinaListView;
 import view.matricula.MatriculaListView;
 import view.notas.NotaListView;
+import view.periodo.PeriodoLetivoListView;
 import view.professor.ProfessorListView;
 import view.turma.TurmaListView;
 import view.auth.LoginDialog;
@@ -22,7 +23,7 @@ public class MainFrame extends JFrame {
     private JMenu cad;
     private JMenu acad;
     private JMenuItem miAlunos, miProf, miDisc, miTurma;
-    private JMenuItem miMat, miNotas, miBoletim;
+    private JMenuItem miMat, miNotas, miBoletim, miPeriodos;
     private JMenuItem miLogout;
 
     public MainFrame(){
@@ -54,7 +55,8 @@ public class MainFrame extends JFrame {
         miMat = new JMenuItem("Matrículas");
         miNotas = new JMenuItem("Notas / Frequência");
         miBoletim = new JMenuItem("Boletim");
-        acad.add(miMat); acad.add(miNotas); acad.add(miBoletim);
+        miPeriodos = new JMenuItem("Períodos Letivos");
+        acad.add(miMat); acad.add(miNotas); acad.add(miBoletim); acad.add(miPeriodos);
 
         JMenu sistema = new JMenu("Sistema");
         miLogout = new JMenuItem("Sair");
@@ -76,6 +78,7 @@ public class MainFrame extends JFrame {
         MatriculaListView vMat = new MatriculaListView();
         NotaListView vNota = new NotaListView();
         BoletimView vBol = new BoletimView();
+        PeriodoLetivoListView vPeriodos = new PeriodoLetivoListView();
 
         content.add(vAlunos, "ALUNOS");
         content.add(vProfs, "PROF");
@@ -84,6 +87,7 @@ public class MainFrame extends JFrame {
         content.add(vMat, "MAT");
         content.add(vNota, "NOTA");
         content.add(vBol, "BOL");
+        content.add(vPeriodos, "PER");
 
         miAlunos.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "ALUNOS"));
         miProf.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "PROF"));
@@ -92,6 +96,7 @@ public class MainFrame extends JFrame {
         miMat.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "MAT"));
         miNotas.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "NOTA"));
         miBoletim.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "BOL"));
+        miPeriodos.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "PER"));
 
         miLogout.addActionListener(e -> {
             int ok = JOptionPane.showConfirmDialog(this, "Sair da sessão?", "Confirmação", JOptionPane.YES_NO_OPTION);
@@ -125,6 +130,7 @@ public class MainFrame extends JFrame {
         miMat.setEnabled(isAdmin);                 // só admin
         miNotas.setEnabled(isAdmin || isProf);     // prof e admin
         miBoletim.setEnabled(true);                // todos
+        miPeriodos.setEnabled(isAdmin);            // só admin
 
         // Opcional: avisar quando clicarem em algo bloqueado (já fica desabilitado)
     }

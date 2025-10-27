@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1761496453529,
+    "nomeCompleto": "João da Silva Oliveira",
+    "cpf": "14043201503",
+    "rg": "14043201503",
+    "dataNascimento": "13-05-1991",
+    "endereco": "Rua das Flores Belas",
+    "telefone": "73981264329",
+    "email": "joaosilvaoliveira061@gmail.com",
+    "formacaoAcademica": "AlgumaCoisa",
+    "disciplinasIds": [
+      1761503677889,
+      1761496453530
+    ]
+  }
+]

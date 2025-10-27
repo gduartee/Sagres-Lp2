@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1761496453530,
+    "nome": "Cálculo I",
+    "codigo": "531653",
+    "cargaHoraria": 4,
+    "descricao": "Máteria dos infernos",
+    "conteudoProgramatico": [
+      "Cálculo;",
+      "Cálculo;",
+      "e mais cálculo."
+    ]
+  },
+  {
+    "id": 1761503677889,
+    "nome": "Disciplina",
+    "codigo": "6134",
+    "cargaHoraria": 2,
+    "descricao": "Sei lá",
+    "conteudoProgramatico": [
+      "Tópico 1;",
+      "Tópico 2;",
+      "Tópico 3."
+    ]
+  }
+]

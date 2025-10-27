@@ -1,26 +1,27 @@
-package view.professor;
+package view.periodo;
 
-import controller.ProfessorController;
-import model.entity.Professor;
+import controller.PeriodoLetivoController;
+import model.entity.PeriodoLetivo;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
-public class ProfessorListView extends JPanel {
-    private final ProfessorController controller = new ProfessorController();
+public class PeriodoLetivoListView extends JPanel {
+    private final PeriodoLetivoController controller = new PeriodoLetivoController();
     private final DefaultTableModel model = new DefaultTableModel(
-            new String[]{"ID","Nome","CPF","Telefone","Email","Carga Horária (h)"}, 0){
+            new String[]{"ID","Ano Escolar","Nome","Tipo"}, 0){
         public boolean isCellEditable(int r,int c){ return false; }
     };
     private final JTable table = new JTable(model);
     private final JTextField txtBusca = new JTextField();
 
-    public ProfessorListView(){
+    public PeriodoLetivoListView(){
         setLayout(new BorderLayout());
+
         JPanel top = new JPanel(new BorderLayout());
-        top.add(new JLabel("Buscar (nome/CPF): "), BorderLayout.WEST);
+        top.add(new JLabel("Buscar (ano/nome/tipo): "), BorderLayout.WEST);
         top.add(txtBusca, BorderLayout.CENTER);
         JButton btnBuscar = new JButton("Buscar");
         JButton btnNovo = new JButton("Novo");
@@ -35,10 +36,10 @@ public class ProfessorListView extends JPanel {
 
         btnBuscar.addActionListener(e -> carregar(txtBusca.getText().trim()));
         btnNovo.addActionListener(e -> {
-            ProfessorFormDialog dlg = new ProfessorFormDialog(null);
+            PeriodoLetivoFormDialog dlg = new PeriodoLetivoFormDialog(null);
             dlg.setVisible(true);
-            if (dlg.getProfessor() != null){
-                controller.salvar(dlg.getProfessor());
+            if (dlg.getPeriodo()!=null){
+                controller.salvar(dlg.getPeriodo());
                 carregar(null);
             }
         });
@@ -46,12 +47,12 @@ public class ProfessorListView extends JPanel {
             int row = table.getSelectedRow();
             if (row == -1) return;
             long id = Long.parseLong(model.getValueAt(row,0).toString());
-            Professor p = controller.listar().stream().filter(x->x.getId()==id).findFirst().orElse(null);
-            if(p==null) return;
-            ProfessorFormDialog dlg = new ProfessorFormDialog(p);
+            PeriodoLetivo p = controller.listar().stream().filter(x->x.getId()==id).findFirst().orElse(null);
+            if (p==null) return;
+            PeriodoLetivoFormDialog dlg = new PeriodoLetivoFormDialog(p);
             dlg.setVisible(true);
-            if (dlg.getProfessor() != null){
-                controller.salvar(dlg.getProfessor());
+            if (dlg.getPeriodo()!=null){
+                controller.salvar(dlg.getPeriodo());
                 carregar(null);
             }
         });
@@ -59,7 +60,7 @@ public class ProfessorListView extends JPanel {
             int row = table.getSelectedRow();
             if (row == -1) return;
             long id = Long.parseLong(model.getValueAt(row,0).toString());
-            int ok = JOptionPane.showConfirmDialog(this, "Excluir professor "+id+"?", "Confirmação", JOptionPane.YES_NO_OPTION);
+            int ok = JOptionPane.showConfirmDialog(this, "Excluir período "+id+"?", "Confirmação", JOptionPane.YES_NO_OPTION);
             if (ok==JOptionPane.YES_OPTION){
                 controller.excluir(id);
                 carregar(null);
@@ -71,10 +72,9 @@ public class ProfessorListView extends JPanel {
 
     private void carregar(String termo){
         model.setRowCount(0);
-        List<Professor> professores = (termo==null || termo.isBlank()) ? controller.listar() : controller.buscar(termo);
-        for (Professor p : professores){
-        	int cargaHoraria = controller.calcularCargaHoraria(p);
-            model.addRow(new Object[]{p.getId(), p.getNomeCompleto(), p.getCpf(), p.getTelefone(), p.getEmail(), cargaHoraria});
+        List<PeriodoLetivo> lista = (termo==null || termo.isBlank()) ? controller.listar() : controller.buscar(termo);
+        for (PeriodoLetivo p: lista){
+            model.addRow(new Object[]{p.getId(), p.getAnoEscolar(), p.getNome(), p.getTipo()});
         }
     }
 }

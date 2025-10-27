@@ -15,6 +15,7 @@ public class ProfessorFormDialog extends JDialog {
     private final JTextField txtTelefone = new JTextField();
     private final JTextField txtEmail = new JTextField();
     private final JTextField txtFormacao = new JTextField();
+    private final JButton btnGerenciarDisciplinas = new JButton("Gerenciar Disciplinas (0 atribuídas)");
 
     public ProfessorFormDialog(Professor p){
         setModal(true);
@@ -33,6 +34,8 @@ public class ProfessorFormDialog extends JDialog {
         form.add(new JLabel("Telefone:")); form.add(txtTelefone);
         form.add(new JLabel("Email:")); form.add(txtEmail);
         form.add(new JLabel("Formação Acadêmica:")); form.add(txtFormacao);
+        form.add(new JLabel("Disciplinas:")); 
+        form.add(btnGerenciarDisciplinas);
         add(form, BorderLayout.CENTER);
 
         JPanel actions = new JPanel();
@@ -41,7 +44,7 @@ public class ProfessorFormDialog extends JDialog {
         actions.add(btnSalvar); actions.add(btnCancelar);
         add(actions, BorderLayout.SOUTH);
 
-        if (p != null){
+        if (p != null) {
             this.professor = p;
             txtNome.setText(p.getNomeCompleto());
             txtCpf.setText(p.getCpf());
@@ -51,8 +54,28 @@ public class ProfessorFormDialog extends JDialog {
             txtTelefone.setText(p.getTelefone());
             txtEmail.setText(p.getEmail());
             txtFormacao.setText(p.getFormacaoAcademica());
+            if(p.getDisciplinasIds() != null) {
+            	btnGerenciarDisciplinas.setText("Gerenciar Disciplinas (" + p.getDisciplinasIds().size() + " atribuídas)");
+            }
         } else this.professor = new Professor();
-
+        
+        btnGerenciarDisciplinas.addActionListener(e -> {
+            if (professor == null) {
+                JOptionPane.showMessageDialog(this, 
+                    "Erro: O objeto Professor não foi inicializado corretamente.", 
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            GerenciarDisciplinasDialog dlg = new GerenciarDisciplinasDialog(professor);
+            dlg.setVisible(true);
+            
+            if (professor.getDisciplinasIds() != null) {
+                btnGerenciarDisciplinas.setText("Gerenciar Disciplinas (" + professor.getDisciplinasIds().size() + " atribuídas)");
+            } else {
+                btnGerenciarDisciplinas.setText("Gerenciar Disciplinas (0 atribuídas)");
+            }
+        });
         btnSalvar.addActionListener(e -> {
             professor.setNomeCompleto(txtNome.getText().trim());
             professor.setCpf(txtCpf.getText().trim());

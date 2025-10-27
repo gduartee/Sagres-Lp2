@@ -3,6 +3,9 @@ package view.disciplina;
 import model.entity.Disciplina;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DisciplinaFormDialog extends JDialog {
     private Disciplina disciplina;
@@ -10,11 +13,12 @@ public class DisciplinaFormDialog extends JDialog {
     private final JTextField txtCodigo = new JTextField();
     private final JTextField txtCarga = new JTextField();
     private final JTextArea txtDesc = new JTextArea(3,20);
+    private final JTextArea txtConteudo = new JTextArea(5, 20);
 
     public DisciplinaFormDialog(Disciplina d){
         setModal(true);
         setTitle(d==null ? "Nova Disciplina" : "Editar Disciplina");
-        setSize(400, 350);
+        setSize(400, 450);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -25,6 +29,8 @@ public class DisciplinaFormDialog extends JDialog {
         form.add(new JLabel("Carga Horária:")); form.add(txtCarga);
         form.add(new JLabel("Descrição:"));
         form.add(new JScrollPane(txtDesc));
+        form.add(new JLabel("<html><b>Conteúdo Programático:</b><br>(Um tópico por linha)</html>"));
+        form.add(new JScrollPane(txtConteudo));
         add(form, BorderLayout.CENTER);
 
         JPanel actions = new JPanel();
@@ -39,14 +45,29 @@ public class DisciplinaFormDialog extends JDialog {
             txtCodigo.setText(d.getCodigo());
             txtCarga.setText(String.valueOf(d.getCargaHoraria()));
             txtDesc.setText(d.getDescricao());
+            if (d.getConteudoProgramatico() != null) {
+                String conteudoText = String.join("\n", d.getConteudoProgramatico());
+                txtConteudo.setText(conteudoText);
+            }
         } else this.disciplina = new Disciplina();
 
         btnSalvar.addActionListener(e -> {
-            disciplina.setNome(txtNome.getText().trim());
-            disciplina.setCodigo(txtCodigo.getText().trim());
-            disciplina.setCargaHoraria(Integer.parseInt(txtCarga.getText().trim()));
-            disciplina.setDescricao(txtDesc.getText().trim());
-            dispose();
+        	try {
+                disciplina.setNome(txtNome.getText().trim());
+                disciplina.setCodigo(txtCodigo.getText().trim());
+                disciplina.setCargaHoraria(Integer.parseInt(txtCarga.getText().trim()));
+                disciplina.setDescricao(txtDesc.getText().trim());
+                
+                List<String> conteudoList = Arrays.stream(txtConteudo.getText().split("\n"))
+                                                  .map(String::trim)
+                                                  .filter(s -> !s.isBlank())
+                                                  .collect(Collectors.toList());
+                disciplina.setConteudoProgramatico(conteudoList);
+                
+                dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "A Carga Horária deve ser um número inteiro válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
         });
         btnCancelar.addActionListener(e -> { disciplina = null; dispose(); });
     }

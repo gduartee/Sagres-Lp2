@@ -1,13 +1,16 @@
 package model.service;
 
 import model.entity.Professor;
+import model.entity.Disciplina;
 import model.repo.ProfessorRepository;
+import model.repo.DisciplinaRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProfessorService {
     private final ProfessorRepository repo = new ProfessorRepository();
+    private final DisciplinaRepository discRepo = new DisciplinaRepository();
 
     public List<Professor> listar() { return repo.findAll(); }
 
@@ -32,4 +35,18 @@ public class ProfessorService {
     }
 
     public boolean excluir(long id) { return repo.delete(id); }
+    
+    public int calcularCargaHoraria(Professor p) {
+        if (p.getDisciplinasIds() == null || p.getDisciplinasIds().isEmpty()) return 0;
+
+        List<Long> assignedIds = p.getDisciplinasIds();
+        List<Disciplina> allDisciplinas = discRepo.findAll();
+
+        int totalCarga = allDisciplinas.stream()
+            .filter(d -> assignedIds.contains(d.getId()))
+            .mapToInt(Disciplina::getCargaHoraria)
+            .sum();
+
+        return totalCarga;
+    }
 }
