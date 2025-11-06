@@ -13,6 +13,7 @@ import view.notas.NotaListView;
 import view.periodo.PeriodoLetivoListView;
 import view.professor.ProfessorListView;
 import view.turma.TurmaListView;
+import view.user.UserListView;
 import view.auth.LoginDialog;
 
 public class MainFrame extends JFrame {
@@ -24,7 +25,7 @@ public class MainFrame extends JFrame {
     private JMenu acad;
     private JMenuItem miAlunos, miProf, miDisc, miTurma;
     private JMenuItem miMat, miNotas, miBoletim, miPeriodos;
-    private JMenuItem miLogout;
+    private JMenuItem miUsers, miLogout;
 
     public MainFrame(){
         setTitle("Sistema de Gestão de Colégio - MVC/JSON");
@@ -59,8 +60,9 @@ public class MainFrame extends JFrame {
         acad.add(miMat); acad.add(miNotas); acad.add(miBoletim); acad.add(miPeriodos);
 
         JMenu sistema = new JMenu("Sistema");
+        miUsers = new JMenuItem("Criar novo User");
         miLogout = new JMenuItem("Sair");
-        sistema.add(miLogout);
+        sistema.add(miUsers); sistema.add(miLogout);
 
         bar.add(cad);
         bar.add(acad);
@@ -79,6 +81,7 @@ public class MainFrame extends JFrame {
         NotaListView vNota = new NotaListView();
         BoletimView vBol = new BoletimView();
         PeriodoLetivoListView vPeriodos = new PeriodoLetivoListView();
+        UserListView vUsers = new UserListView();
 
         content.add(vAlunos, "ALUNOS");
         content.add(vProfs, "PROF");
@@ -88,6 +91,7 @@ public class MainFrame extends JFrame {
         content.add(vNota, "NOTA");
         content.add(vBol, "BOL");
         content.add(vPeriodos, "PER");
+        content.add(vUsers, "USE");
 
         miAlunos.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "ALUNOS"));
         miProf.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "PROF"));
@@ -97,6 +101,7 @@ public class MainFrame extends JFrame {
         miNotas.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "NOTA"));
         miBoletim.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "BOL"));
         miPeriodos.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "PER"));
+        miUsers.addActionListener(e -> ((CardLayout)content.getLayout()).show(content, "USE"));
 
         miLogout.addActionListener(e -> {
             int ok = JOptionPane.showConfirmDialog(this, "Sair da sessão?", "Confirmação", JOptionPane.YES_NO_OPTION);
@@ -107,10 +112,10 @@ public class MainFrame extends JFrame {
         });
 
         // ==== PERMISSÕES POR CARGO ====
-        applyRolePermissions(u.getRole());
+        applyRolePermissions(u.getRole(), content);
     }
 
-    private void applyRolePermissions(Role role){
+    private void applyRolePermissions(Role role, JPanel content){
         // Regras simples:
         // ADMIN: tudo habilitado
         // PROFESSOR: pode Notas/Frequência e Boletim; vê Alunos (consulta) mas não cadastros pesados; sem Matrícula/Professor/Disciplina/Turma
@@ -120,19 +125,34 @@ public class MainFrame extends JFrame {
         boolean isAluno = (role==Role.ALUNO);
 
         // Menu Cadastros
-        cad.setEnabled(isAdmin);
-        miAlunos.setEnabled(isAdmin);   // se quiser liberar leitura p/ professor, deixe habilitado e bloqueie botões nas views
-        miProf.setEnabled(isAdmin);
-        miDisc.setEnabled(isAdmin);
-        miTurma.setEnabled(isAdmin);
+        cad.setVisible(isAdmin);
+        miAlunos.setVisible(isAdmin);   // se quiser liberar leitura p/ professor, deixe habilitado e bloqueie botões nas views
+        miProf.setVisible(isAdmin);
+        miDisc.setVisible(isAdmin);
+        miTurma.setVisible(isAdmin);
 
         // Menu Acadêmico
-        miMat.setEnabled(isAdmin);                 // só admin
-        miNotas.setEnabled(isAdmin || isProf);     // prof e admin
-        miBoletim.setEnabled(true);                // todos
-        miPeriodos.setEnabled(isAdmin);            // só admin
+        miMat.setVisible(isAdmin);                 // só admin
+        miNotas.setVisible(isAdmin || isProf);     // prof e admin
+        miBoletim.setVisible(true);                // todos
+        miPeriodos.setVisible(isAdmin);            // só admin
+        
+        // Menu Sistema
+        miUsers.setVisible(isAdmin);               // só admin
 
         // Opcional: avisar quando clicarem em algo bloqueado (já fica desabilitado)
+        
+        // Ajusta a tela inicial conforme a permissão
+        if(isAdmin)
+        {
+        	((CardLayout)content.getLayout()).show(content, "ALUNOS");
+        } else if(isProf)
+        {
+        	((CardLayout)content.getLayout()).show(content, "NOTA");
+        } else if(isAluno)
+        {
+        	((CardLayout)content.getLayout()).show(content, "BOL");
+        }
     }
 
     public boolean isReady(){ return ready; }

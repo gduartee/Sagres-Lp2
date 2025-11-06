@@ -8,5 +8,25 @@
     "passwordHash": "08a0ef1ef1fabad4f24c1b43628d8d3b3311c2f46a444812d2a90632350d13b8",
     "saltHex": "5114f959a45b92dad7a4d1eb9b771ae2",
     "ativo": true
+  },
+  {
+    "id": 1762386139770,
+    "username": "aluno_001",
+    "nomeCompleto": "Aluno Que Não Quer Nada",
+    "email": "aluno001@mail.com",
+    "role": "ALUNO",
+    "passwordHash": "70297bfc587fca9af04f302cbace01e4309a123a12b9b5330f8cbf61180a7465",
+    "saltHex": "a242768c33d405e9c6282f7b2901a155",
+    "ativo": true
+  },
+  {
+    "id": 1762386418827,
+    "username": "murilinho",
+    "nomeCompleto": "Murilo Amante de Java da Silva",
+    "email": "murilindojaval0l@gmail.com",
+    "role": "PROFESSOR",
+    "passwordHash": "9f04edea57899775bf9633fd49484e02072f20e6e467520dda043342206a59fc",
+    "saltHex": "388478438461a54793236d696884dc30",
+    "ativo": true
   }
 ]

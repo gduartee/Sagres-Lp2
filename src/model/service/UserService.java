@@ -6,12 +6,23 @@ import model.entity.User;
 import model.repo.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserService {
     private final UserRepository repo = new UserRepository();
 
     public List<User> listar() { return repo.findAll(); }
-
+    
+    public List<User> buscar(String termo) {
+        if (termo == null || termo.isBlank()) return listar();
+        String t = termo.toLowerCase();
+        return listar().stream().filter(u ->
+            (u.getUsername()!=null && u.getUsername().toLowerCase().contains(t)) ||
+            (u.getNomeCompleto()!=null && u.getNomeCompleto().toLowerCase().contains(t)) ||
+            (u.getEmail()!=null && u.getEmail().toLowerCase().contains(t)) )
+            .collect(Collectors.toList());
+    }
+    
     public User findByUsername(String username){
         return repo.findAll().stream()
                 .filter(u -> u.getUsername()!=null && u.getUsername().equalsIgnoreCase(username))
@@ -44,6 +55,16 @@ public class UserService {
         u.setAtivo(true);
         return repo.save(u);
     }
+    
+    public User salvar(User u){
+    	if (u.getUsername()==null || u.getUsername().isBlank())
+    		throw new IllegalArgumentException("Username obrigatório");
+        if (u.getEmail()==null || u.getEmail().isBlank())
+        	throw new IllegalArgumentException("Email obrigatório");
+        if (u.getPasswordHash()==null || u.getPasswordHash().isBlank())
+        	throw new IllegalArgumentException("Senha obrigatória");
+        return repo.save(u);
+    }
 
     public void alterarSenha(long userId, String novaSenha){
         if (novaSenha==null || novaSenha.isBlank()) throw new IllegalArgumentException("Senha obrigatória");
@@ -62,4 +83,6 @@ public class UserService {
             salvarNovo("admin", "Administrador", "admin@local", Role.ADMIN, "admin");
         }
     }
+    
+    public boolean excluir(long id) { return repo.delete(id); }
 }

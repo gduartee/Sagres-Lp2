@@ -1,7 +1,6 @@
 package app;
 
 import javax.swing.SwingUtilities;
-import model.entity.User;
 import view.MainFrame;
 
 public class Main {
