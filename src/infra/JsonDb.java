@@ -7,11 +7,17 @@ import java.nio.file.*;
 import java.util.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import java.time.LocalDate;
 
 /** Utilitário central de leitura/escrita JSON */
 public class JsonDb {
 
     private static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDate.class, 
+                (JsonSerializer<LocalDate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+            .registerTypeAdapter(LocalDate.class, 
+                (JsonDeserializer<LocalDate>) (json, typeOfT, context) -> 
+                    json.getAsString().isEmpty() ? null : LocalDate.parse(json.getAsString()))
             .setPrettyPrinting()
             .serializeNulls()
             .create();
@@ -39,7 +45,8 @@ public class JsonDb {
                 Files.createDirectories(p.getParent());
             }
             String json = gson.toJson(data);
-            Files.writeString(p, json, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.writeString(p, json, StandardCharsets.UTF_8, 
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException("Falha ao gravar " + path, e);
         }
